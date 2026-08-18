@@ -1,0 +1,10 @@
+# Generated upstream and copied in verbatim; reformatting would diverge from the released files.
+public/data/*.json
+public/data/*.csv
+
+# Build and tooling output
+dist
+coverage
+playwright-report
+test-results
+.astro

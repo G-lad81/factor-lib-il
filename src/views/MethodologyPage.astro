@@ -1,0 +1,190 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import manifest from '../../public/data/manifest.json';
+import { COPY } from '@/i18n/content';
+import type { Locale } from '@/i18n/locales';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const c = COPY[locale].methodology;
+---
+
+<BaseLayout locale={locale} page="methodology" title={c.title} description={c.description}>
+  <article class="page shell prose methodology">
+    <header class="page-head">
+      <p class="eyebrow">{c.version} <bdi>{manifest.methodology_version}</bdi></p>
+      <h1>{c.title}</h1>
+      <div class="overview">
+        <p>{c.overview1a}<strong>{c.framework}</strong>{c.overview1b}</p>
+        <p>{c.overview2}</p>
+        <p>{c.overview3}</p>
+      </div>
+    </header>
+    <div class="disclosures">
+      <details class="method-section">
+        <summary><bdi>{c.rfTitle}</bdi></summary><div class="method-content">
+          <p>{c.rfIntro}</p><p>{c.rfDaily}</p><p>{c.rfMonthly}</p><p class="notation">
+            {c.rfNotation}
+          </p><div class="formula-pair">
+            <div>
+              <h3>{c.daily}</h3><div class="formula" dir="ltr">
+                RFₜ = (1 + Yₜ / 100)^(Δdₜ/365) − 1
+              </div>
+            </div>
+            <div>
+              <h3>{c.monthly}</h3><div class="formula" dir="ltr">RFₘ = Π(1 + RF_d) − 1</div>
+            </div>
+          </div>
+        </div>
+      </details>
+      <details class="method-section">
+        <summary><bdi>{c.marketTitle}</bdi></summary><div class="method-content">
+          <p>{c.marketIntro}</p><p>{c.marketWeightingText}</p><p>{c.marketCapText}</p><p>
+            {c.marketPurposeText}
+          </p><p>{c.marketFormula}</p><div class="formula" dir="ltr">
+            MKT-RFₜ = Σᵢ(wᵢ,ₜ₋₁ × Rᵢ,ₜ) − RFₜ
+          </div>
+        </div>
+      </details>
+      <details class="method-section">
+        <summary><bdi>{c.sizeTitle}</bdi></summary><div class="method-content">
+          <p>{c.sizeIntro}</p><p>{c.ffSortText}</p><ul class="method-list">
+            <li>{c.sortSize}</li><li>{c.sortValue}</li>
+          </ul><p>{c.sortResult}</p><p>{c.bookEquityText}</p><p>{c.pitText}</p><p>
+            {c.breakpointText}
+          </p><p>{c.smbFormula}</p><div class="formula" dir="ltr">
+            SMBₜ = ⅓[R(S/H)ₜ + R(S/M)ₜ + R(S/L)ₜ] − ⅓[R(B/H)ₜ + R(B/M)ₜ + R(B/L)ₜ]
+          </div>
+        </div>
+      </details>
+      <details class="method-section">
+        <summary><bdi>{c.valueTitle}</bdi></summary><div class="method-content">
+          <p>{c.valueIntro}</p><p>{c.valueSharedText}</p><p>{c.hmlFormula}</p><div
+            class="formula"
+            dir="ltr"
+          >
+            HMLₜ = ½[R(S/H)ₜ + R(B/H)ₜ] − ½[R(S/L)ₜ + R(B/L)ₜ]
+          </div>
+        </div>
+      </details>
+      <details class="method-section">
+        <summary><bdi>{c.momentumTitle}</bdi></summary><div class="method-content">
+          <p>{c.momentumIntro}</p><p>{c.momentumSortText}</p><p>{c.sizeSortText}</p><p>
+            {c.momentumFormula}
+          </p><div class="formula" dir="ltr">
+            MOMₜ = ½[R(S/W)ₜ + R(B/W)ₜ] − ½[R(S/L)ₜ + R(B/L)ₜ]
+          </div>
+        </div>
+      </details>
+      <details class="method-section">
+        <summary>{c.regressionTitle}</summary><div class="method-content">
+          <p>{c.regressionIntro}</p><p>{c.regressionEquationLead}</p><div class="formula" dir="ltr">
+            Rₚ,ₜ − RFₜ = α + βₘ(MKT-RF)ₜ + βₛSMBₜ + βₕHMLₜ + βₒMOMₜ + εₜ
+          </div><p>{c.regressionBasis}</p><h3>{c.technicalTitle}</h3><ul class="method-list">
+            <li>{c.techAnnual}</li><li>
+              {c.techHac}<div class="formula" dir="ltr">
+                L = min(floor[4 × (n / 100)^(2/9)], n − k − 1)
+              </div>
+            </li><li>{c.techPValue}</li>
+          </ul><h3>{c.fitMeasuresTitle}</h3><ul class="method-list">
+            <li>{c.regressionAdjR2}</li><li>{c.regressionDeltaR2}</li>
+          </ul>
+        </div>
+      </details>
+      <details class="method-section">
+        <summary>{c.revisionsTitle}</summary><div class="method-content"><p>{c.revisions}</p></div>
+      </details>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .page-head {
+    max-width: none;
+    margin-bottom: 0;
+  }
+  .methodology .overview {
+    margin-top: 0.8rem;
+  }
+  .methodology .overview p {
+    margin: 0.7rem 0 0;
+  }
+  .page-head strong {
+    color: var(--ink);
+  }
+  .disclosures {
+    margin-top: 2.2rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .method-section {
+    border-top: 1px solid var(--line);
+  }
+  .method-section summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.15rem 0;
+    color: var(--ink);
+    cursor: pointer;
+    list-style: none;
+    font-size: var(--type-section-title);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+  }
+  .method-section summary::-webkit-details-marker {
+    display: none;
+  }
+  .method-section summary::after {
+    content: '+';
+    flex: none;
+    color: var(--accent-dark);
+    font-size: 1.35rem;
+    font-weight: 400;
+    line-height: 1;
+  }
+  .method-section[open] summary::after {
+    content: '−';
+  }
+  .method-section summary:hover {
+    color: var(--accent-dark);
+  }
+  .method-content {
+    padding: 0 0 1.5rem;
+  }
+  .method-content > :first-child {
+    margin-top: 0;
+  }
+  .methodology h3 {
+    margin: 1.25rem 0 0.25rem;
+  }
+  .formula-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .formula-pair h3 {
+    margin-top: 0;
+  }
+  .formula-pair .formula {
+    margin-bottom: 0;
+  }
+  .method-list {
+    margin: 0.35rem 0 0.9rem;
+    padding-inline-start: 1.15rem;
+  }
+  .method-list li {
+    margin-bottom: 0.2rem;
+  }
+  .formula {
+    margin-block: 0.7rem 1rem;
+  }
+  @media (max-width: 48rem) {
+    .formula-pair {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

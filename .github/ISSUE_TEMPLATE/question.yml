@@ -1,0 +1,29 @@
+name: Data or methodology question
+description: Ask about the published factor data, or report something that looks wrong in it.
+labels: ['question']
+body:
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Topic
+      options:
+        - A value in the data looks wrong
+        - How a series is constructed
+        - Using the files (schema, units, dates)
+        - The website or regression tool
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Data version
+      description: From manifest.json, for example 2026.07.2.
+    validations:
+      required: false
+  - type: textarea
+    id: detail
+    attributes:
+      label: Details
+      description: Include the factor, the date, and the value you expected where relevant.
+    validations:
+      required: true

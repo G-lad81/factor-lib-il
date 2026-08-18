@@ -1,0 +1,78 @@
+---
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import '@/styles/global.css';
+import { SITE, withBase } from '@/config/site';
+import { COPY } from '@/i18n/content';
+import { isolateTechnicalRuns } from '@/i18n/bidi';
+import { DEFAULT_LOCALE, direction, localePath, type Locale, type PageKey } from '@/i18n/locales';
+
+interface Props {
+  title?: string;
+  description?: string;
+  locale?: Locale;
+  page?: PageKey;
+}
+const {
+  title,
+  description = SITE.description,
+  locale = DEFAULT_LOCALE,
+  page = 'home',
+} = Astro.props;
+const siteName = locale === 'he' ? isolateTechnicalRuns(SITE.name) : SITE.name;
+const pageTitle = title ? `${title} · ${siteName}` : siteName;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
+const alternateLocale: Locale = locale === 'en' ? 'he' : 'en';
+const alternateUrl = new URL(
+  withBase(localePath(alternateLocale, page)),
+  Astro.site ?? Astro.url.origin,
+);
+const defaultUrl = new URL(
+  withBase(localePath(DEFAULT_LOCALE, page)),
+  Astro.site ?? Astro.url.origin,
+);
+const copy = COPY[locale];
+const contentSecurityPolicy = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "connect-src 'self'",
+  "font-src 'self'",
+  "form-action 'self'",
+  "frame-src 'none'",
+  "img-src 'self' data:",
+  "media-src 'none'",
+  "object-src 'none'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  "worker-src 'none'",
+].join('; ');
+---
+
+<!doctype html>
+<html lang={locale} dir={direction(locale)}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Security-Policy" content={contentSecurityPolicy} />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang={alternateLocale} href={alternateUrl} />
+    <link rel="alternate" hreflang={locale} href={canonicalUrl} />
+    <link rel="alternate" hreflang="x-default" href={defaultUrl} />
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content={SITE.name} />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{copy.skip}</a>
+    <Header locale={locale} page={page} />
+    <main id="main"><slot /></main>
+    <Footer locale={locale} />
+  </body>
+</html>

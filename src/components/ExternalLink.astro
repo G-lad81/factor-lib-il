@@ -1,0 +1,10 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type Props = HTMLAttributes<'a'>;
+
+const { rel, ...attributes } = Astro.props;
+const relationship = ['noopener', 'noreferrer', rel].filter(Boolean).join(' ');
+---
+
+<a {...attributes} target="_blank" rel={relationship} data-external-link><slot /></a>

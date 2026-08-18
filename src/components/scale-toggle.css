@@ -1,0 +1,34 @@
+/* The L/A scale switch, shared by the factor chart and the regression fit chart. */
+.scale-toggle {
+  display: flex;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  overflow: hidden;
+}
+.scale-toggle button {
+  min-width: 2.2rem;
+  padding: 0.48rem 0.6rem;
+  border: 0;
+  border-inline-start: 1px solid var(--line);
+  background: white;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.scale-toggle button:first-child {
+  border-inline-start: 0;
+}
+.scale-toggle button.active {
+  background: var(--accent);
+  color: white;
+}
+.scale-toggle button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+@media (max-width: 48rem) {
+  .scale-toggle {
+    width: fit-content;
+  }
+}

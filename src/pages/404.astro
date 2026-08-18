@@ -1,0 +1,30 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { withBase } from '@/config/site';
+import { COPY } from '@/i18n/content';
+const en = COPY.en.notFound;
+const he = COPY.he.notFound;
+---
+
+<BaseLayout locale="he" title={he.title} description={he.description}
+  ><div class="page shell">
+    <p class="eyebrow">404</p><h1>{en.title} · <span lang="he" dir="rtl">{he.title}</span></h1>
+    <p class="lead">{en.text}</p><p class="lead" lang="he" dir="rtl">{he.text}</p>
+    <div class="not-found-actions">
+      <a class="button" lang="he" dir="rtl" href={withBase('/')}>{he.home}</a><a
+        class="button secondary"
+        lang="en"
+        dir="ltr"
+        href={withBase('/en/')}>{en.home}</a
+      >
+    </div>
+  </div></BaseLayout
+>
+<style>
+  .not-found-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+</style>
