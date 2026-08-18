@@ -1,0 +1,115 @@
+---
+import { FACTORS } from '@/config/factors';
+import { COPY } from '@/i18n/content';
+import type { Locale } from '@/i18n/locales';
+
+interface Props {
+  locale?: Locale;
+}
+const { locale = 'he' } = Astro.props;
+const copy = COPY[locale].factors;
+---
+
+<div class="factor-grid">
+  {
+    FACTORS.map((factor) => (
+      <article class="factor-card card" style={`--factor:${factor.color}`}>
+        <div class="factor-heading">
+          <div class="factor-icon" aria-hidden="true">
+            {factor.symbol.slice(0, 1)}
+          </div>
+          <div>
+            <h3 dir="ltr">{factor.symbol}</h3>
+            <span>{copy[factor.key].name}</span>
+          </div>
+        </div>
+        <div class="factor-copy">
+          <p>{copy[factor.key].meaning}</p>
+        </div>
+      </article>
+    ))
+  }
+</div>
+
+<style>
+  .factor-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.8rem;
+  }
+  .factor-card {
+    padding: 1rem;
+    display: flex;
+    min-width: 0;
+    min-height: 7.4rem;
+    flex-direction: column;
+    gap: 0.75rem;
+    box-shadow: 0 4px 15px rgba(24, 39, 58, 0.05);
+  }
+  .factor-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .factor-icon {
+    flex: 0 0 2.6rem;
+    height: 2.6rem;
+    display: grid;
+    place-items: center;
+    border: 1.5px solid var(--factor);
+    border-radius: 50%;
+    color: var(--factor);
+    font-weight: 780;
+  }
+  h3 {
+    margin: 0;
+    font-size: 1.08rem;
+  }
+  .factor-heading span {
+    display: block;
+    margin-top: 0.05rem;
+    color: var(--muted);
+    font-size: 0.72rem;
+    line-height: 1.25;
+  }
+  .factor-copy {
+    display: block;
+  }
+  p {
+    margin: 0;
+    color: var(--ink);
+    font-size: 0.76rem;
+    font-weight: 650;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+  @media (max-width: 64rem) {
+    .factor-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  /* Two up, never one: five full-width cards is half a screen of scroll for what is a legend. */
+  @media (max-width: 48rem) {
+    .factor-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.6rem;
+    }
+    .factor-card {
+      min-height: 0;
+      gap: 0.5rem;
+      padding: 0.75rem;
+    }
+    .factor-icon {
+      flex-basis: 2rem;
+      height: 2rem;
+      font-size: 0.9rem;
+    }
+    h3 {
+      font-size: 0.98rem;
+    }
+    p {
+      white-space: normal;
+    }
+  }
+</style>

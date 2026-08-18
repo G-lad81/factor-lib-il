@@ -1,0 +1,37 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ExternalLink from '@/components/ExternalLink.astro';
+import { COPY } from '@/i18n/content';
+import type { Locale } from '@/i18n/locales';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const c = COPY[locale].accessibility;
+const issueUrl = 'https://github.com/G-lad81/factor-lib-il/issues/new?template=accessibility.yml';
+const reviewed = new Intl.DateTimeFormat(locale === 'he' ? 'he-IL' : 'en', {
+  dateStyle: 'long',
+  timeZone: 'UTC',
+}).format(new Date('2026-08-14T00:00:00Z'));
+---
+
+<BaseLayout locale={locale} page="accessibility" title={c.title} description={c.description}
+  ><article class="page shell prose">
+    <header class="page-head"><h1>{c.title}</h1><p class="lead">{c.intro}</p></header><h2>
+      {c.targetTitle}
+    </h2><p>{c.target}</p><h2>{c.featuresTitle}</h2><ul>
+      {c.features.map((item) => <li>{item}</li>)}
+    </ul><h2>{c.testingTitle}</h2><p>{c.testing}</p><h2>{c.limitationsTitle}</h2><p>
+      {c.limitations}
+    </p><h2>{c.feedbackTitle}</h2><p>{c.feedback1}</p><p>
+      <ExternalLink href={issueUrl}>{c.feedbackLink}</ExternalLink>
+    </p><p class="reviewed">{c.reviewed} <bdi>{reviewed}</bdi></p>
+  </article></BaseLayout
+>
+<style>
+  .reviewed {
+    margin-top: 2rem;
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+</style>

@@ -1,0 +1,79 @@
+---
+import { SITE, withBase } from '@/config/site';
+import ExternalLink from './ExternalLink.astro';
+import { COPY } from '@/i18n/content';
+import { DEFAULT_LOCALE, localePath, type Locale } from '@/i18n/locales';
+
+interface Props {
+  locale?: Locale;
+}
+const { locale = DEFAULT_LOCALE } = Astro.props;
+const copy = COPY[locale];
+---
+
+<footer class="site-footer shell">
+  <div class="disclaimer">
+    <strong>{copy.footer.title}</strong>
+    <p>{copy.footer.body}</p>
+  </div>
+  <div class="footer-links">
+    <span>
+      {copy.footer.maintained}{' '}
+      <strong><bdi>{SITE.maintainer}</bdi></strong> · <ExternalLink href={SITE.xProfile}
+        ><bdi>{SITE.xHandle}</bdi></ExternalLink
+      >
+    </span>
+    <div>
+      <ExternalLink href={SITE.repository}>GitHub</ExternalLink>{' '}<a
+        href={`${withBase(localePath(locale, 'about'))}#citation`}>{copy.footer.citation}</a
+      >{' '}<a href={withBase(localePath(locale, 'methodology'))}>{copy.nav.methodology}</a>{' '}<a
+        href={withBase(localePath(locale, 'accessibility'))}>{copy.nav.accessibility}</a
+      >
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line);
+    margin-top: 4rem;
+    padding-block: 1.5rem 2.5rem;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 2rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  strong {
+    color: var(--ink);
+  }
+  p {
+    margin: 0.35rem 0 0;
+    max-width: 45rem;
+    line-height: 1.6;
+  }
+  .footer-links {
+    text-align: end;
+  }
+  .footer-links div {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.2rem;
+    margin-top: 0.6rem;
+  }
+  a {
+    color: var(--accent-dark);
+  }
+  @media (max-width: 48rem) {
+    .site-footer {
+      grid-template-columns: 1fr;
+    }
+    .footer-links {
+      text-align: start;
+    }
+    .footer-links div {
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+  }
+</style>

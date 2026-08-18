@@ -1,0 +1,415 @@
+---
+import { FACTOR_BY_KEY, type RegressionFactor } from '@/config/factors';
+import type { FactorStatistics, PerformanceStatistics } from '@/lib/data/performance';
+import { COPY } from '@/i18n/content';
+import type { Locale } from '@/i18n/locales';
+
+interface Props {
+  statistics?: PerformanceStatistics;
+  locale?: Locale;
+}
+
+const { statistics, locale = 'he' } = Astro.props;
+const copy = COPY[locale].performance;
+const intlLocale = locale === 'he' ? 'he-IL' : 'en';
+const rows = statistics
+  ? (Object.entries(statistics.factors) as Array<[RegressionFactor, FactorStatistics]>)
+  : [];
+const month = (date: string) =>
+  new Intl.DateTimeFormat(intlLocale, { month: 'short', year: 'numeric', timeZone: 'UTC' }).format(
+    new Date(`${date}T00:00:00Z`),
+  );
+const percent = (value: number, signed = false) =>
+  new Intl.NumberFormat(intlLocale, {
+    style: 'percent',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    signDisplay: signed ? 'exceptZero' : 'auto',
+  }).format(value);
+const sharpeHelp = locale === 'he' ? copy.sharpeHelp : statistics?.notes.sharpe;
+const inferenceHelp = locale === 'he' ? copy.inferenceHelp : statistics?.notes.inference;
+const frictionless = locale === 'he' ? copy.frictionless : statistics?.notes.frictionless;
+const power =
+  locale === 'he'
+    ? copy.power.replace('{months}', String(statistics?.window.months ?? ''))
+    : statistics?.notes.power;
+---
+
+<section class="shell performance" aria-labelledby="performance-title">
+  <div class="performance-head">
+    <div>
+      <h2 id="performance-title">{copy.title}</h2>
+      {
+        statistics && (
+          <>
+            <p>
+              <bdi>{statistics.window.months}</bdi> {copy.months} ·{' '}
+              <bdi>{month(statistics.window.start)}</bdi> –{' '}
+              <bdi>{month(statistics.window.end)}</bdi>
+            </p>
+            <p>
+              {copy.rfPrefix} <bdi>{percent(statistics.risk_free.mean_ann)}</bdi> {copy.rfSuffix}
+            </p>
+          </>
+        )
+      }
+    </div>
+  </div>
+  <div class="performance-card card">
+    <div class="table-scroll" tabindex="0">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col" class="factor-column">{copy.factor}</th>
+            <th scope="col" class="metric-column">
+              {copy.mean}<br /><span>{copy.monthly}</span>
+            </th>
+            <th scope="col" class="metric-column">
+              {copy.volatility}<br /><span>{copy.monthly}</span>
+            </th>
+            <th scope="col" class="metric-column">
+              <span class="header-with-help">
+                <span>{copy.sharpe}<br /><span>{copy.annualized}</span></span>
+                {
+                  statistics && (
+                    <span class="help">
+                      <button type="button" aria-describedby="sharpe-help">
+                        i
+                      </button>
+                      <span id="sharpe-help" role="tooltip">
+                        {sharpeHelp}
+                      </span>
+                    </span>
+                  )
+                }
+              </span>
+            </th>
+            <th scope="col" class="metric-column">
+              <span class="header-with-help">
+                {copy.significance}
+                {
+                  statistics && (
+                    <span class="help">
+                      <button type="button" aria-describedby="inference-help">
+                        i
+                      </button>
+                      <span id="inference-help" role="tooltip">
+                        {inferenceHelp}
+                      </span>
+                    </span>
+                  )
+                }
+              </span>
+            </th>
+            <th scope="col" class="metric-column">{copy.drawdown}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            statistics ? (
+              rows.map(([key, item]) => (
+                <tr>
+                  <th scope="row" class="factor-column">
+                    <bdi dir="ltr">{FACTOR_BY_KEY[key].symbol}</bdi>
+                  </th>
+                  <td
+                    class:list={[
+                      'metric-column',
+                      'mean',
+                      item.mean_monthly > 0 ? 'positive' : 'negative',
+                    ]}
+                  >
+                    <bdi dir="ltr">{percent(item.mean_monthly, true)}</bdi>
+                  </td>
+                  <td class="metric-column">
+                    <bdi dir="ltr">{percent(item.vol_monthly)}</bdi>
+                  </td>
+                  <td class="metric-column">
+                    <bdi dir="ltr">{item.sharpe_ann.toFixed(2)}</bdi>
+                  </td>
+                  <td class="metric-column significance">
+                    <span dir="ltr">t = {item.t_stat_hac.toFixed(2)}</span>
+                    <small dir="ltr">p = {item.p_value_hac.toFixed(3)}</small>
+                  </td>
+                  <td class="metric-column">
+                    <bdi dir="ltr">{percent(item.max_drawdown)}</bdi>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr class="pending-row">
+                <td colspan="6">
+                  <strong>{copy.pendingTitle}</strong>
+                  <p>{copy.pending}</p>
+                </td>
+              </tr>
+            )
+          }
+        </tbody>
+      </table>
+    </div>
+    {
+      statistics && (
+        <ul class="factor-stack">
+          {rows.map(([key, item]) => (
+            <li>
+              <p class="stack-symbol">
+                <bdi dir="ltr">{FACTOR_BY_KEY[key].symbol}</bdi>
+              </p>
+              <dl>
+                <div>
+                  <dt>
+                    {copy.mean} {copy.monthly}
+                  </dt>
+                  <dd class:list={[item.mean_monthly > 0 ? 'positive' : 'negative', 'mean']}>
+                    <bdi dir="ltr">{percent(item.mean_monthly, true)}</bdi>
+                  </dd>
+                </div>
+                <div>
+                  <dt>
+                    {copy.volatility} {copy.monthly}
+                  </dt>
+                  <dd>
+                    <bdi dir="ltr">{percent(item.vol_monthly)}</bdi>
+                  </dd>
+                </div>
+                <div>
+                  <dt>
+                    {copy.sharpe} {copy.annualized}
+                  </dt>
+                  <dd>
+                    <bdi dir="ltr">{item.sharpe_ann.toFixed(2)}</bdi>
+                  </dd>
+                </div>
+                <div>
+                  <dt>{copy.drawdown}</dt>
+                  <dd>
+                    <bdi dir="ltr">{percent(item.max_drawdown)}</bdi>
+                  </dd>
+                </div>
+                <div class="stack-wide">
+                  <dt>{copy.significance}</dt>
+                  <dd>
+                    <span dir="ltr">t = {item.t_stat_hac.toFixed(2)}</span>{' '}
+                    <small dir="ltr">p = {item.p_value_hac.toFixed(3)}</small>
+                  </dd>
+                </div>
+              </dl>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+    {
+      statistics && (
+        <div class="performance-notes">
+          <p>{frictionless}</p>
+          <p>{power}</p>
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .performance {
+    margin-bottom: 3rem;
+  }
+  .performance-head {
+    margin-bottom: 1rem;
+  }
+  .performance-head h2 {
+    margin-bottom: 0.35rem;
+    font-size: 1.5rem;
+  }
+  .performance-head p {
+    margin: 0.12rem 0 0;
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  .performance-card {
+    overflow: visible;
+    padding: 0.4rem 1.2rem 1rem;
+  }
+  .table-scroll {
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    min-width: 760px;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+  th,
+  td {
+    padding: 0.85rem 0.75rem;
+    border-bottom: 1px solid var(--line);
+    text-align: center;
+    white-space: nowrap;
+  }
+  .factor-column {
+    text-align: center;
+  }
+  thead th {
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 680;
+    line-height: 1.3;
+    vertical-align: bottom;
+  }
+  thead th > span,
+  thead th span span {
+    font-weight: inherit;
+  }
+  tbody th,
+  tbody td {
+    font-size: 0.84rem;
+  }
+  tbody tr:last-child th,
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+  .pending-row td {
+    height: 11rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  .pending-row strong {
+    display: block;
+    color: var(--ink);
+  }
+  .pending-row p {
+    margin: 0.45rem 0 0;
+    white-space: normal;
+  }
+  .mean {
+    font-weight: 700;
+  }
+  .positive {
+    color: var(--success);
+  }
+  .negative {
+    color: var(--danger);
+  }
+  .significance span,
+  .significance small {
+    display: block;
+  }
+  .significance small {
+    color: var(--muted);
+    font-size: 0.72rem;
+  }
+  .header-with-help {
+    position: relative;
+    display: inline-block;
+  }
+  .help {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-end: calc(100% + 0.4rem);
+    transform: translateY(-50%);
+  }
+  .help button {
+    width: 1.15rem;
+    height: 1.15rem;
+    padding: 0;
+    border: 1px solid #9aa6b5;
+    border-radius: 50%;
+    color: var(--muted);
+    background: #fff;
+    font-size: 0.68rem;
+    font-weight: 750;
+    cursor: help;
+  }
+  [role='tooltip'] {
+    position: absolute;
+    inset-inline-end: 0;
+    z-index: 2;
+    width: min(19rem, 75vw);
+    margin-top: 0.45rem;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 0.4rem;
+    background: #fff;
+    box-shadow: var(--shadow);
+    color: var(--ink);
+    font-size: 0.72rem;
+    font-weight: 400;
+    line-height: 1.45;
+    white-space: normal;
+    visibility: hidden;
+  }
+  .help:hover [role='tooltip'],
+  .help:focus-within [role='tooltip'] {
+    visibility: visible;
+  }
+  .performance-notes {
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line);
+  }
+  .performance-notes p {
+    margin: 0.3rem 0 0;
+    color: var(--muted);
+    font-size: 0.72rem;
+    line-height: 1.45;
+  }
+  /* One block per factor below tablet. The table has min-width 760px, so on a phone it showed
+     three of six columns behind a horizontal scroll nobody finds. The table stays in the DOM. */
+  .factor-stack {
+    display: none;
+  }
+  @media (max-width: 48rem) {
+    .table-scroll {
+      display: none;
+    }
+    .factor-stack {
+      display: grid;
+      gap: 0.5rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .factor-stack li {
+      padding: 0.7rem 0.8rem;
+      border: 1px solid var(--line);
+      border-radius: 0.5rem;
+    }
+    .stack-symbol {
+      margin: 0 0 0.5rem;
+      font-size: 0.95rem;
+      font-weight: 750;
+    }
+    .factor-stack dl {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.45rem 0.9rem;
+      margin: 0;
+    }
+    .stack-wide {
+      grid-column: 1 / -1;
+    }
+    .factor-stack dt {
+      color: var(--muted);
+      font-size: 0.7rem;
+      line-height: 1.25;
+    }
+    .factor-stack dd {
+      margin: 0.1rem 0 0;
+      font-size: 0.86rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .factor-stack dd.mean {
+      font-weight: 700;
+    }
+    .factor-stack small {
+      color: var(--muted);
+    }
+    .performance-card {
+      padding: 0.75rem;
+    }
+    .performance {
+      margin-bottom: 1.75rem;
+    }
+  }
+</style>

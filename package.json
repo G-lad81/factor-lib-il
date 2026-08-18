@@ -1,0 +1,78 @@
+{
+  "name": "factor-lib-il",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Open factor and risk-free return data with client-side regression tools for Israeli equities.",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --port 4322",
+    "build": "npm run validate:data && astro check && astro build",
+    "preview": "astro preview --port 4322",
+    "check": "astro check && eslint . && prettier --check .",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test --config=tests/playwright.config.ts",
+    "test:e2e:production": "npm run build && playwright test --config=tests/playwright.production.config.ts",
+    "validate:data": "tsx scripts/validate-data.ts",
+    "validate:publication": "npm run validate:data && tsx scripts/validate-publication.ts",
+    "release:check": "npm run check && npm run test:coverage && npm run test:e2e && npm run test:e2e:production && npm run validate:publication"
+  },
+  "keywords": [
+    "israel",
+    "factor-investing",
+    "carhart",
+    "quantitative-finance"
+  ],
+  "author": "Gilad",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "prettier": {
+    "plugins": [
+      "prettier-plugin-astro"
+    ],
+    "overrides": [
+      {
+        "files": "*.astro",
+        "options": {
+          "parser": "astro"
+        }
+      }
+    ],
+    "singleQuote": true,
+    "trailingComma": "all",
+    "printWidth": 100
+  },
+  "dependencies": {
+    "@astrojs/preact": "^6.0.2",
+    "astro": "^7.2.1",
+    "jstat": "^1.9.6",
+    "ml-matrix": "^6.15.0",
+    "papaparse": "^5.5.4",
+    "preact": "^10.29.8",
+    "read-excel-file": "^9.3.10",
+    "uplot": "^1.6.32"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.6",
+    "@axe-core/playwright": "^4.13.0",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.62.1",
+    "@testing-library/preact": "^3.2.4",
+    "@testing-library/user-event": "^14.6.3",
+    "@types/papaparse": "^5.3.16",
+    "@vitest/coverage-v8": "^4.1.10",
+    "astro-eslint-parser": "^3.0.0",
+    "eslint": "^10.8.1",
+    "eslint-plugin-astro": "^3.1.0",
+    "globals": "^17.10.0",
+    "jsdom": "^30.0.1",
+    "prettier": "^3.9.6",
+    "prettier-plugin-astro": "^0.14.1",
+    "tsx": "^4.23.12",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.67.0",
+    "vitest": "^4.1.10"
+  }
+}

@@ -1,0 +1,46 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { COPY } from '@/i18n/content';
+import type { Locale } from '@/i18n/locales';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const c = COPY[locale].changelog;
+---
+
+<BaseLayout locale={locale} page="changelog" title={c.title} description={c.description}
+  ><div class="page shell">
+    <header class="page-head"><h1>{c.title}</h1><p class="lead">{c.lead}</p></header>{
+      c.entries.map((entry) => (
+        <article class="entry card">
+          <p class="release-state">
+            <bdi>{entry.version}</bdi>
+          </p>
+          <h2>{entry.heading}</h2>
+          <ul>
+            {entry.items.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </article>
+      ))
+    }
+  </div></BaseLayout
+>
+<style>
+  .entry {
+    padding: 1.5rem;
+  }
+  .release-state {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  .entry h2 {
+    margin-top: 0.35rem;
+  }
+  .entry li {
+    color: var(--muted);
+  }
+</style>

@@ -1,0 +1,40 @@
+---
+import { SITE, withBase } from '@/config/site';
+import { DEFAULT_LOCALE, localePath, type Locale } from '@/i18n/locales';
+
+interface Props {
+  locale?: Locale;
+}
+const { locale = DEFAULT_LOCALE } = Astro.props;
+---
+
+<a class="brand" href={withBase(localePath(locale, 'home'))} aria-label={SITE.name}>
+  <svg viewBox="0 0 32 32" aria-hidden="true">
+    <path class="exposures" d="M5.5 11V17M10.75 15V23M16 5V16M21.25 15V23M26.5 11V17"></path>
+  </svg>
+  <bdi>{SITE.name}</bdi>
+</a>
+
+<style>
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: var(--ink);
+    font-weight: 760;
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+  svg {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+  path {
+    fill: none;
+    stroke: var(--accent);
+  }
+  .exposures {
+    stroke-width: 2.6;
+    stroke-linecap: round;
+  }
+</style>

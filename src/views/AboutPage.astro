@@ -1,0 +1,57 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { SITE } from '@/config/site';
+import ExternalLink from '@/components/ExternalLink.astro';
+import { COPY } from '@/i18n/content';
+import type { Locale } from '@/i18n/locales';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const c = COPY[locale].about;
+---
+
+<BaseLayout locale={locale} page="about" title={COPY[locale].nav.about} description={c.description}>
+  <article class="page shell prose">
+    <header class="page-head"><h1>{c.title}</h1></header>
+    <p>{c.intro1}</p><p>{c.intro2}</p>
+    <h2>{c.approachTitle}</h2><p>{c.approach1}</p><p>{c.approach2}</p>
+    <h2>{c.maintainerTitle}</h2><p>
+      {c.maintainedBy}{' '}
+      <strong><bdi>{SITE.maintainer}</bdi></strong> (<ExternalLink href={SITE.xProfile}
+        ><bdi>{SITE.xHandle}</bdi></ExternalLink
+      >
+      {' '}{c.onX}{' '}
+      <ExternalLink href={SITE.repository}><bdi>G-lad81/factor-lib-il</bdi></ExternalLink>.
+    </p>
+    <h2 id="citation">{c.citationTitle}</h2><p>{c.citation}</p>
+    <h2>{c.independenceTitle}</h2><p>{c.independence}</p>
+    <section class="full-disclaimer" aria-labelledby="disclaimer-title">
+      <h2 id="disclaimer-title">{c.disclaimerTitle}</h2><p>{c.disclaimer1}</p><p>
+        {c.disclaimer2}
+      </p><p>{c.disclaimer3}</p><p id="licensing">
+        {c.licensing1}{' '}
+        <ExternalLink href="https://creativecommons.org/licenses/by-nc/4.0/"
+          ><bdi>CC BY-NC 4.0</bdi></ExternalLink
+        >{c.licensing2}
+      </p><p>
+        {c.disclaimer4a}<strong>{c.valueFactor}</strong>{c.disclaimer4b}
+      </p>
+    </section>
+  </article>
+</BaseLayout>
+<style>
+  .page-head {
+    max-width: none;
+  }
+  .full-disclaimer {
+    margin-top: 2.5rem;
+    padding: 1.25rem 1.4rem;
+    border: 1px solid var(--line);
+    border-radius: 0.6rem;
+    background: var(--subtle);
+  }
+  .full-disclaimer h2 {
+    margin-top: 0;
+  }
+</style>

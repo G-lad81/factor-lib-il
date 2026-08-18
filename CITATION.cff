@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: 'If you use this software or data, cite it using these metadata and include the data version, methodology version, and access date. The website source code is licensed MIT; the published factor datasets are licensed CC BY-NC 4.0.'
+title: 'Factor Library IL'
+type: software
+authors:
+  - given-names: Gilad
+    alias: G-lad81
+repository-code: 'https://github.com/G-lad81/factor-lib-il'
+url: 'https://factorlib.org'
+license: MIT
+version: 1.0.0
+date-released: '2026-08-18'
+identifiers:
+  - type: other
+    value: 'data 2026.07.2'
+    description: 'Data version of the published factor release.'
+  - type: other
+    value: 'methodology 1.1.0'
+    description: 'Methodology version the release was built under.'
+keywords:
+  - factor-investing
+  - asset-pricing
+  - israel
+  - open-data

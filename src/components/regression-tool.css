@@ -1,0 +1,381 @@
+.regression-shell {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: stretch;
+}
+.contract,
+.model,
+.upload,
+.results {
+  padding: 1.15rem;
+}
+.contract h2,
+.model h2,
+.upload h2,
+.results h2 {
+  margin-bottom: 0.8rem;
+  font-size: var(--type-ui-title);
+}
+.contract,
+.model,
+.upload {
+  min-width: 0;
+}
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0.7rem 0;
+}
+legend {
+  font-weight: 700;
+  font-size: 0.86rem;
+  margin-bottom: 0.45rem;
+}
+.segmented {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+  overflow: hidden;
+}
+.segmented button {
+  min-width: 0;
+  padding: 0.55rem 0.35rem;
+  font-size: 0.78rem;
+  white-space: nowrap;
+  background: white;
+  border: 0;
+  border-inline-start: 1px solid var(--line);
+  cursor: pointer;
+}
+.segmented button:first-child {
+  border-inline-start: 0;
+}
+.segmented button.active {
+  background: var(--accent);
+  color: white;
+  font-weight: 700;
+}
+.contract-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+.schema-box {
+  background: var(--subtle);
+  border-inline-start: 3px solid var(--accent);
+  padding: 0.75rem;
+  font-size: 0.77rem;
+}
+.schema-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.schema-box code {
+  flex: none;
+  margin: 0;
+  padding: 0.25rem 0.4rem;
+  background: white;
+  border: 1px solid var(--line);
+}
+.schema-box p {
+  color: var(--muted);
+  margin: 0.4rem 0;
+}
+.template-link {
+  display: inline-block;
+  margin-top: 0.75rem;
+  font-weight: 650;
+  font-size: 0.8rem;
+}
+.model-help,
+.model-summary,
+.result-model {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+.factor-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+.factor-choice {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 3.1rem;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+  cursor: pointer;
+  background: white;
+}
+.factor-choice:has(input:checked) {
+  border-color: var(--accent);
+  background: #f5f9ff;
+}
+.factor-choice input {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: var(--accent);
+}
+.factor-choice span,
+.factor-choice small {
+  display: block;
+}
+.factor-choice small {
+  margin-top: 0.15rem;
+  color: var(--muted);
+  font-size: 0.7rem;
+}
+.required-factor {
+  cursor: default;
+}
+.required-factor input:disabled {
+  opacity: 1;
+}
+.model-summary {
+  margin: auto 0 0;
+  padding-top: 0.35rem;
+  font-weight: 650;
+  color: var(--ink);
+}
+.drop-zone {
+  position: relative;
+  min-height: 8.5rem;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.45rem;
+  padding: 0.8rem;
+  border: 1px dashed #aeb9c7;
+  border-radius: 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  background: var(--subtle);
+}
+.drop-zone.has-file {
+  border-color: var(--success);
+  background: #f2fbf7;
+}
+.drop-zone:focus-within {
+  outline: 3px solid rgba(9, 105, 232, 0.28);
+  outline-offset: 3px;
+}
+/* Clamped to 1px inside a positioned parent: at its intrinsic width the native file control
+   overflows and adds a horizontal scrollbar at 320px. Do not remove. */
+.drop-zone input {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.upload-mark {
+  font-size: 2rem;
+  color: var(--accent);
+}
+.drop-zone span:last-of-type {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+.run {
+  width: 100%;
+  margin-top: 0.75rem;
+}
+.status-line {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+.error,
+.warning {
+  padding: 0.8rem 1rem;
+  border-radius: 0.4rem;
+}
+.error {
+  background: #fff3f1;
+  color: var(--danger);
+  border: 1px solid #f4c7c3;
+}
+.error p {
+  margin: 0.3rem 0;
+}
+.warning {
+  background: #fff7e8;
+  color: var(--warning);
+}
+.results {
+  grid-column: 1 / -1;
+}
+.results-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 1.25rem 0;
+  border-block: 1px solid var(--line);
+}
+.metrics div {
+  padding: 1rem;
+  text-align: center;
+  border-inline-start: 1px solid var(--line);
+}
+.metrics div:first-child {
+  border-inline-start: 0;
+}
+.metrics span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+.metrics strong {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 1.15rem;
+}
+.metrics .alpha-inference {
+  font-size: 0.95rem;
+}
+.table-wrap {
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  min-width: 700px;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+  font-variant-numeric: tabular-nums;
+}
+th,
+td {
+  padding: 0.7rem;
+  text-align: center;
+  border-bottom: 1px solid var(--line);
+}
+thead th {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 680;
+}
+.method-note {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+.results-guide {
+  margin: 1rem 0 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+  padding: 0.8rem 1rem;
+  background: var(--subtle);
+  font-size: 0.82rem;
+}
+.results-guide summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+.results-guide dl {
+  margin-bottom: 0;
+}
+.results-guide div + div {
+  margin-top: 0.65rem;
+}
+.results-guide dt {
+  font-weight: 700;
+}
+.results-guide dd {
+  margin-inline-start: 0;
+  color: var(--muted);
+}
+.results-guide p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+.fit-chart {
+  min-height: 300px;
+  width: 100%;
+  overflow: hidden;
+}
+/* Off the shared scale on purpose: this is the three-to-two column step, and moving it to 64rem
+   would reflow a desktop layout that is not being changed. */
+@media (max-width: 900px) {
+  .regression-shell {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .upload {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 48rem) {
+  .regression-shell {
+    grid-template-columns: 1fr;
+  }
+  .results,
+  .upload {
+    grid-column: auto;
+  }
+  .metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .metrics div:nth-child(3) {
+    border-inline-start: 0;
+  }
+  .results-head {
+    display: block;
+  }
+  .results-head .button {
+    margin-bottom: 1rem;
+  }
+}
+@media (max-width: 30rem) {
+  .factor-options {
+    grid-template-columns: 1fr;
+  }
+}
+.fit-caption {
+  margin: 0.6rem 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.fit-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.fit-head h3 {
+  margin: 0;
+}
+.results-guide .guide-intro {
+  margin-top: 0.6rem;
+  color: var(--ink);
+}
+.results-guide h4 {
+  margin: 1.1rem 0 0.4rem;
+  font-size: 0.85rem;
+}
+.results-guide h4:first-of-type {
+  margin-top: 0.9rem;
+}
+.guide-steps,
+.guide-warnings {
+  margin: 0 0 0.4rem;
+  padding-inline-start: 1.3rem;
+  color: var(--muted);
+}
+.guide-steps li,
+.guide-warnings li {
+  margin-bottom: 0.35rem;
+}

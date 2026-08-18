@@ -1,0 +1,126 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import RegressionTool from '@/components/RegressionTool';
+import { COPY } from '@/i18n/content';
+import type { Locale } from '@/i18n/locales';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const c = COPY[locale].regression;
+const templates = [
+  {
+    title: c.dailyNav,
+    code: 'date,nav\n2025-01-02,100.0000\n2025-01-03,100.2500',
+    text: c.navAnchor,
+    file: 'template_daily_nav.csv',
+    link: c.downloadDailyNav,
+  },
+  {
+    title: c.monthlyNav,
+    code: 'date,nav\n2025-01-30,100.0000\n2025-02-27,101.5000',
+    text: c.monthlyDates,
+    file: 'template_monthly_nav.csv',
+    link: c.downloadMonthlyNav,
+  },
+  {
+    title: c.dailyReturns,
+    code: 'date,return\n2025-01-02,0.0025\n2025-01-03,-0.0010',
+    text: c.decimalReturns,
+    file: 'template_daily_returns.csv',
+    link: c.downloadDailyReturns,
+  },
+  {
+    title: c.monthlyReturns,
+    code: 'date,return\n2025-01-30,0.0125\n2025-02-27,-0.0040',
+    text: c.monthlyDates,
+    file: 'template_monthly_returns.csv',
+    link: c.downloadMonthlyReturns,
+  },
+];
+---
+
+<BaseLayout locale={locale} page="regression" title={c.title} description={c.description}>
+  <div class="page shell">
+    <header class="page-head"><h1>{c.title}</h1><p class="lead">{c.lead}</p></header>
+    <RegressionTool locale={locale} client:load />
+    <section id="file-formats" class="contracts" aria-labelledby="contracts-title">
+      <h2 id="contracts-title">{c.formatsTitle}</h2><p class="contracts-intro">{c.formatsIntro}</p>
+      <div class="example-grid">
+        {
+          templates.map((item) => (
+            <details>
+              <>
+                <summary>{item.title}</summary>
+                <pre dir="ltr">
+                  <code>{item.code}</code>
+                </pre>
+                <p>{item.text}</p>
+                <a href={`${import.meta.env.BASE_URL}templates/${item.file}`} download>
+                  {item.link}
+                </a>
+              </>
+            </details>
+          ))
+        }
+      </div>
+      <p class="contract-rule">{c.contractRule}</p>
+    </section>
+  </div>
+</BaseLayout>
+<style>
+  .contracts {
+    margin-top: 2.5rem;
+    scroll-margin-top: 6rem;
+  }
+  .contracts h2 {
+    margin-bottom: 0.4rem;
+  }
+  .contracts-intro,
+  .contract-rule {
+    max-width: 45rem;
+    color: var(--muted);
+  }
+  .example-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+  .example-grid details {
+    border: 1px solid var(--line);
+    border-radius: 0.55rem;
+    padding: 0.9rem 1rem;
+    background: #fff;
+  }
+  .example-grid summary {
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .example-grid pre {
+    overflow-x: auto;
+    margin: 0.8rem 0;
+    padding: 0.75rem;
+    border-radius: 0.35rem;
+    background: var(--subtle);
+    font-size: 0.78rem;
+  }
+  .example-grid p {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .example-grid a {
+    font-size: 0.82rem;
+    font-weight: 650;
+  }
+  .contract-rule {
+    margin-top: 1rem;
+    font-size: 0.82rem;
+  }
+  @media (max-width: 48rem) {
+    .example-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

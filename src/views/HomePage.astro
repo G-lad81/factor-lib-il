@@ -1,0 +1,248 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import FactorCards from '@/components/FactorCards.astro';
+import FactorChart from '@/components/FactorChart';
+import FactorPerformance from '@/components/FactorPerformance.astro';
+import ExternalLink from '@/components/ExternalLink.astro';
+import manifest from '../../public/data/manifest.json';
+import { withBase } from '@/config/site';
+import { COPY } from '@/i18n/content';
+import { localePath, type Locale } from '@/i18n/locales';
+import type { DataManifest } from '@/lib/data/contracts';
+import {
+  validatePerformanceRelease,
+  validatePerformanceStatistics,
+  type PerformanceStatistics,
+} from '@/lib/data/performance';
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const copy = COPY[locale].home;
+const release = manifest as DataManifest;
+const ready = release.status === 'ready';
+const daily = release.daily;
+const monthly = release.monthly;
+const updated = release.generated_at
+  ? new Intl.DateTimeFormat(locale === 'he' ? 'he-IL' : 'en', {
+      dateStyle: 'medium',
+      timeZone: 'UTC',
+    }).format(new Date(release.generated_at))
+  : null;
+let performance: PerformanceStatistics | undefined;
+if (release.status === 'ready') {
+  const source = JSON.parse(
+    await readFile(resolve(process.cwd(), 'public/data/stats.json'), 'utf8'),
+  );
+  performance = validatePerformanceStatistics(
+    source,
+    release.factors.filter((factor) => factor !== 'rf'),
+  );
+  validatePerformanceRelease(performance, release);
+}
+---
+
+<BaseLayout locale={locale} page="home" description={copy.description}>
+  <section class="hero shell">
+    <div class="hero-copy">
+      <p class="eyebrow">{copy.eyebrow}</p>
+      <h1><bdi>Factor Library IL</bdi></h1>
+      <p class="lead">{copy.lead}</p>
+      <div class="actions">
+        {
+          ready ? (
+            <>
+              <a class="button" href={withBase('/data/factors_daily.csv')} download>
+                {copy.dailyDownload}
+              </a>
+              <a class="button secondary" href={withBase('/data/factors_monthly.csv')} download>
+                {copy.monthlyDownload}
+              </a>
+            </>
+          ) : (
+            <>
+              <button class="button" type="button" disabled>
+                {copy.dailyDownload}
+              </button>
+              <button class="button secondary" type="button" disabled>
+                {copy.monthlyDownload}
+              </button>
+            </>
+          )
+        }
+      </div>
+      <p id="data-status" class="coverage">
+        <span class="status">{ready ? copy.published : copy.pending}</span>
+        {
+          ready && daily && monthly && updated ? (
+            <span>
+              {copy.release} <bdi>{release.data_version}</bdi>. {copy.dailyCoverage}{' '}
+              <bdi>{daily.coverage_start}</bdi>–<bdi>{daily.coverage_end}</bdi>;{' '}
+              {copy.monthlyCoverage} <bdi>{monthly.coverage_start}</bdi>–
+              <bdi>{monthly.coverage_end}</bdi>. {copy.updated} <bdi>{updated}</bdi>.
+            </span>
+          ) : (
+            copy.pendingText
+          )
+        }
+      </p>
+      <details class="csv-format">
+        <summary>{copy.csvFormat}</summary>
+        <p>
+          <code dir="ltr"
+            >{ready ? ['date', ...release.factors].join(',') : 'date,rf,mkt_rf,smb,hml,mom'}</code
+          >
+        </p>
+        <p>{copy.csvDescription}</p>
+        <p>
+          {copy.dataLicense}{' '}
+          <ExternalLink href="https://creativecommons.org/licenses/by-nc/4.0/" rel="license"
+            >CC BY-NC 4.0</ExternalLink
+          >. {copy.licenseText}
+        </p>
+      </details>
+    </div>
+    <aside class="principles card">
+      <strong>{copy.principlesTitle}</strong><ul>
+        {copy.principles.map((item) => <li>{item}</li>)}
+      </ul>
+    </aside>
+  </section>
+  <section class="shell factors">
+    <div class="section-head">
+      <h2>{copy.factorTitle}</h2><a href={withBase(localePath(locale, 'methodology'))}
+        >{copy.methodologyLink}</a
+      >
+    </div>
+    <FactorCards locale={locale} />
+  </section>
+  <section class="shell chart"><FactorChart locale={locale} client:load /></section>
+  <FactorPerformance statistics={performance} locale={locale} />
+  <section class="shell regression-section">
+    <h2>{copy.regressionTitle}</h2>
+    <div class="regression-cta card">
+      <p>{copy.regressionText}</p><a
+        class="button"
+        href={withBase(localePath(locale, 'regression'))}>{copy.regressionLink}</a
+      >
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: 5rem 3.7rem;
+    display: grid;
+    grid-template-columns: 1.7fr 0.8fr;
+    gap: 4rem;
+    align-items: center;
+  }
+  .hero-copy {
+    max-width: 42rem;
+  }
+  .lead {
+    max-width: 39rem;
+  }
+  .actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.8rem;
+  }
+  .coverage {
+    color: var(--muted);
+    font-size: 0.82rem;
+    margin-top: 1rem;
+  }
+  .coverage .status {
+    margin-inline-end: 0.4rem;
+  }
+  .csv-format {
+    width: fit-content;
+    max-width: 39rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .csv-format summary {
+    color: var(--accent-dark);
+    font-weight: 650;
+    cursor: pointer;
+  }
+  .csv-format p {
+    margin: 0.45rem 0 0;
+  }
+  .csv-format code {
+    color: var(--ink);
+  }
+  .principles {
+    padding: 1.4rem;
+    box-shadow: none;
+  }
+  .principles ul {
+    padding-inline-start: 1.2rem;
+    color: var(--muted);
+    margin-bottom: 0;
+  }
+  .principles li + li {
+    margin-top: 0.45rem;
+  }
+  .factors,
+  .chart {
+    margin-bottom: 3rem;
+  }
+  .section-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .section-head h2,
+  .regression-section > h2 {
+    margin-bottom: 0;
+    font-size: 1.5rem;
+  }
+  .regression-section > h2 {
+    margin-bottom: 1rem;
+  }
+  .regression-cta {
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+  .regression-cta p {
+    margin: 0;
+    color: var(--muted);
+  }
+  .regression-cta .button {
+    flex: none;
+    font-size: 0.84rem;
+    white-space: nowrap;
+  }
+  @media (max-width: 48rem) {
+    .hero {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      padding-block: 3rem;
+    }
+    .section-head,
+    .regression-cta {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+  @media (max-width: 48rem) {
+    .actions {
+      margin-top: 1.1rem;
+    }
+  }
+  @media (max-width: 30rem) {
+    .actions {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+</style>
