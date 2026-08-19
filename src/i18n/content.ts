@@ -43,6 +43,8 @@ const en = {
   },
   home: {
     description: 'Open factor and risk-free return data for Israeli equities.',
+    social:
+      'Open library of factor returns for the Israeli equity market | In-browser fund performance analysis',
     eyebrow: 'Open quantitative research',
     lead: 'Daily and monthly factor returns for the Israeli equity market.',
     dailyDownload: 'Download daily CSV',
@@ -471,6 +473,7 @@ const heSource: TranslationShape<typeof en> = {
   },
   home: {
     description: 'נתוני פקטורים וריבית חסרת סיכון לשוק המניות בישראל.',
+    social: 'ספרייה פתוחה לסדרות פקטורים עבור שוק המניות הישראלי | ניתוח ביצועי קרנות בדפדפן',
     eyebrow: 'מחקר כמותי פתוח',
     lead: 'נתוני פקטורים יומיים וחודשיים לשוק המניות הישראלי.',
     dailyDownload: 'הורדת נתונים יומיים',

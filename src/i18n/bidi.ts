@@ -21,6 +21,16 @@ export function isolateTechnicalRuns(text: string): string {
   );
 }
 
+/**
+ * Remove the isolate marks again.
+ *
+ * They belong in visible right-to-left text. Metadata read by machines — Open Graph, card
+ * previews, feed readers — renders in someone else's context, where the marks are invisible junk.
+ */
+export function stripIsolates(text: string): string {
+  return text.replaceAll(LTR_ISOLATE, '').replaceAll(POP_DIRECTIONAL_ISOLATE, '');
+}
+
 export function isolateTechnicalCopy<T>(value: T): T {
   if (typeof value === 'string') {
     return isolateTechnicalRuns(value) as T;

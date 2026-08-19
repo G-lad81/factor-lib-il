@@ -4,24 +4,31 @@ import Footer from '@/components/Footer.astro';
 import '@/styles/global.css';
 import { SITE, withBase } from '@/config/site';
 import { COPY } from '@/i18n/content';
-import { isolateTechnicalRuns } from '@/i18n/bidi';
+import { isolateTechnicalRuns, stripIsolates } from '@/i18n/bidi';
 import { DEFAULT_LOCALE, direction, localePath, type Locale, type PageKey } from '@/i18n/locales';
 
 interface Props {
   title?: string;
   description?: string;
+  /** Overrides `description` in the link-preview card only; search results keep the short one. */
+  social?: string;
   locale?: Locale;
   page?: PageKey;
 }
 const {
   title,
   description = SITE.description,
+  social,
   locale = DEFAULT_LOCALE,
   page = 'home',
 } = Astro.props;
 const siteName = locale === 'he' ? isolateTechnicalRuns(SITE.name) : SITE.name;
 const pageTitle = title ? `${title} · ${siteName}` : siteName;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
+// Card consumers render in their own context, so the isolate marks are stripped back out here.
+const shareTitle = stripIsolates(pageTitle);
+const shareDescription = stripIsolates(social ?? description);
+const shareImage = new URL(withBase('/og.png'), Astro.site ?? Astro.url.origin);
 const alternateLocale: Locale = locale === 'en' ? 'he' : 'en';
 const alternateUrl = new URL(
   withBase(localePath(alternateLocale, page)),
@@ -62,11 +69,21 @@ const contentSecurityPolicy = [
     <link rel="alternate" hreflang={locale} href={canonicalUrl} />
     <link rel="alternate" hreflang="x-default" href={defaultUrl} />
     <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
-    <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={description} />
+    <meta property="og:title" content={shareTitle} />
+    <meta property="og:description" content={shareDescription} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:locale" content={locale === 'he' ? 'he_IL' : 'en_US'} />
+    <meta property="og:image" content={shareImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={SITE.name} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content={SITE.xHandle} />
+    <meta name="twitter:title" content={shareTitle} />
+    <meta name="twitter:description" content={shareDescription} />
+    <meta name="twitter:image" content={shareImage} />
     <title>{pageTitle}</title>
   </head>
   <body>
