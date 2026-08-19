@@ -28,7 +28,9 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run test:coverage
-      - run: npx --no-install playwright install --with-deps chromium
+      # No --with-deps: that runs apt-get on every run and dominated the pipeline (3min+ against
+      # ~30s of actual work). The ubuntu-latest image already ships Chromium's system libraries.
+      - run: npx --no-install playwright install chromium
       - run: npm run test:e2e
       - run: npm run test:e2e:production
 
