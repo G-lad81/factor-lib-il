@@ -42,7 +42,8 @@ const en = {
     mom: { name: 'Momentum', meaning: 'Winners minus losers', detail: 'Monthly rebalance' },
   },
   home: {
-    description: 'Open factor and risk-free return data for Israeli equities.',
+    description:
+      'Open factor library for the Israeli equity market | Daily and monthly data | In-browser fund performance analysis',
     social:
       'Open library of factor returns for the Israeli equity market | In-browser fund performance analysis',
     eyebrow: 'Open quantitative research',
@@ -472,7 +473,8 @@ const heSource: TranslationShape<typeof en> = {
     mom: { name: 'מומנטום', meaning: 'מנצחות פחות מפסידות', detail: 'הרכב חודשי' },
   },
   home: {
-    description: 'נתוני פקטורים וריבית חסרת סיכון לשוק המניות בישראל.',
+    description:
+      'ספריית פקטורים פתוחה עבור שוק המניות הישראלי | דאטא בתדירות יומית וחודשית | כלי לניתוח ביצועי קרנות בדפדפן',
     social: 'ספרייה פתוחה לסדרות פקטורים עבור שוק המניות הישראלי | ניתוח ביצועי קרנות בדפדפן',
     eyebrow: 'מחקר כמותי פתוח',
     lead: 'נתוני פקטורים יומיים וחודשיים לשוק המניות הישראלי.',

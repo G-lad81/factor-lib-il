@@ -31,6 +31,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
 const shareTitle = stripIsolates(pageTitle);
 const shareDescription = stripIsolates(social ?? description);
 const shareImage = new URL(withBase('/og.png'), Astro.site ?? Astro.url.origin);
+const siteOrigin = (Astro.site ?? new URL(Astro.url.origin)).origin;
 const alternateLocale: Locale = locale === 'en' ? 'he' : 'en';
 const alternateUrl = new URL(
   withBase(localePath(alternateLocale, page)),
@@ -64,13 +65,15 @@ const contentSecurityPolicy = [
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="Content-Security-Policy" content={contentSecurityPolicy} />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <meta name="description" content={description} />
+    <meta name="description" content={stripIsolates(description)} />
     <meta name="theme-color" content="#ffffff" />
     <link rel="canonical" href={canonicalUrl} />
     <link rel="alternate" hreflang={alternateLocale} href={alternateUrl} />
     <link rel="alternate" hreflang={locale} href={canonicalUrl} />
     <link rel="alternate" hreflang="x-default" href={defaultUrl} />
+    <link rel="icon" href={withBase('/favicon.ico')} sizes="48x48" />
     <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={withBase('/icon-192.png')} />
     <meta property="og:title" content={shareTitle} />
     <meta property="og:description" content={shareDescription} />
     <meta property="og:type" content="website" />
@@ -86,6 +89,37 @@ const contentSecurityPolicy = [
     <meta name="twitter:title" content={shareTitle} />
     <meta name="twitter:description" content={shareDescription} />
     <meta name="twitter:image" content={shareImage} />
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'Organization',
+            '@id': `${siteOrigin}#organization`,
+            name: SITE.name,
+            url: siteOrigin,
+            logo: {
+              '@type': 'ImageObject',
+              url: `${siteOrigin}/icon-512.png`,
+              width: 512,
+              height: 512,
+            },
+            sameAs: [SITE.repository, SITE.xProfile],
+          },
+          {
+            '@type': 'WebSite',
+            '@id': `${siteOrigin}#website`,
+            name: SITE.name,
+            url: siteOrigin,
+            description: shareDescription,
+            inLanguage: locale === 'he' ? 'he-IL' : 'en',
+            publisher: { '@id': `${siteOrigin}#organization` },
+          },
+        ],
+      })}
+    />
     <title>{shareTitle}</title>
   </head>
   <body>

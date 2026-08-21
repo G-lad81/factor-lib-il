@@ -54,10 +54,16 @@ test('production data files are directly accessible without the website UI', asy
 test('production metadata uses the repository base path', async ({ page }) => {
   await page.goto('./about/');
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', publicUrl('/about/'));
-  await expect(page.locator('link[rel="icon"]')).toHaveAttribute(
-    'href',
+  // every icon, not just the SVG: a favicon served from the wrong path is why search engines
+  // fall back to a generic globe
+  const icons = await page
+    .locator('link[rel="icon"], link[rel="apple-touch-icon"]')
+    .evaluateAll((els) => els.map((el) => el.getAttribute('href')));
+  expect(icons).toEqual([
+    `${basePrefix}/favicon.ico`,
     `${basePrefix}/favicon.svg`,
-  );
+    `${basePrefix}/icon-192.png`,
+  ]);
   await expect(page.locator('meta[http-equiv="Content-Security-Policy"]')).toHaveAttribute(
     'content',
     /connect-src 'self'.*object-src 'none'/,
