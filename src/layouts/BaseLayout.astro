@@ -26,6 +26,8 @@ const siteName = locale === 'he' ? isolateTechnicalRuns(SITE.name) : SITE.name;
 const pageTitle = title ? `${title} · ${siteName}` : siteName;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
 // Card consumers render in their own context, so the isolate marks are stripped back out here.
+// Isolate marks are for visible right-to-left text. The document title is also read by
+// search engines as the result headline, so it gets the stripped form too.
 const shareTitle = stripIsolates(pageTitle);
 const shareDescription = stripIsolates(social ?? description);
 const shareImage = new URL(withBase('/og.png'), Astro.site ?? Astro.url.origin);
@@ -84,7 +86,7 @@ const contentSecurityPolicy = [
     <meta name="twitter:title" content={shareTitle} />
     <meta name="twitter:description" content={shareDescription} />
     <meta name="twitter:image" content={shareImage} />
-    <title>{pageTitle}</title>
+    <title>{shareTitle}</title>
   </head>
   <body>
     <a class="skip-link" href="#main">{copy.skip}</a>
