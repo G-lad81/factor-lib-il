@@ -1,54 +1,54 @@
 {
-  "data_version": "2026.07.2",
-  "generated_at": "2026-08-18T14:59:18Z",
+  "data_version": "2026.08.0",
+  "generated_at": "2026-09-03T04:00:13Z",
   "window": {
     "start": "2015-07-30",
-    "end": "2026-07-31",
-    "months": 133
+    "end": "2026-08-31",
+    "months": 134
   },
   "risk_free": {
-    "mean_ann": 0.01501329,
-    "mean_monthly": 0.00124258
+    "mean_ann": 0.01515067,
+    "mean_monthly": 0.00125387
   },
   "factors": {
     "mkt_rf": {
-      "mean_monthly": 0.0077507,
-      "vol_monthly": 0.04326873,
-      "sharpe_ann": 0.6205226,
-      "t_stat_hac": 2.14650651,
-      "p_value_hac": 0.03183259,
+      "mean_monthly": 0.00761452,
+      "vol_monthly": 0.04313458,
+      "sharpe_ann": 0.61151595,
+      "t_stat_hac": 2.11721968,
+      "p_value_hac": 0.03424121,
       "max_drawdown": -0.34402447
     },
     "smb": {
-      "mean_monthly": 0.00155357,
-      "vol_monthly": 0.02335155,
-      "sharpe_ann": 0.23046529,
-      "t_stat_hac": 0.62647267,
-      "p_value_hac": 0.53100496,
-      "max_drawdown": -0.34397874
+      "mean_monthly": 0.00133022,
+      "vol_monthly": 0.02340682,
+      "sharpe_ann": 0.19686692,
+      "t_stat_hac": 0.53973165,
+      "p_value_hac": 0.58938211,
+      "max_drawdown": -0.34397877
     },
     "hml": {
-      "mean_monthly": 0.00727422,
-      "vol_monthly": 0.03474393,
-      "sharpe_ann": 0.72526733,
-      "t_stat_hac": 1.76099372,
-      "p_value_hac": 0.07823947,
-      "max_drawdown": -0.41406419
+      "mean_monthly": 0.00772524,
+      "vol_monthly": 0.03500461,
+      "sharpe_ann": 0.7644998,
+      "t_stat_hac": 1.87775924,
+      "p_value_hac": 0.06041411,
+      "max_drawdown": -0.41406421
     },
     "mom": {
-      "mean_monthly": 0.01474687,
-      "vol_monthly": 0.03912285,
-      "sharpe_ann": 1.30575039,
-      "t_stat_hac": 4.0747236,
-      "p_value_hac": 4.607e-05,
-      "max_drawdown": -0.32018823
+      "mean_monthly": 0.01421804,
+      "vol_monthly": 0.03945332,
+      "sharpe_ann": 1.24837979,
+      "t_stat_hac": 3.88578447,
+      "p_value_hac": 0.000102,
+      "max_drawdown": -0.3201882
     }
   },
   "notes": {
     "frictionless": "Returns are frictionless: no transaction costs, spreads or market impact are deducted. They are not attainable trading returns.",
     "inference": "Mean and volatility are monthly. t-statistics use Newey-West (HAC) standard errors and test the monthly mean; |t| > 2 corresponds to roughly 5% significance.",
     "sharpe": "Sharpe is annualised as sqrt(12) x monthly mean / monthly deviation. No risk-free rate is subtracted: MKT-RF is already an excess return and the long-short factors are zero-investment portfolios.",
-    "power": "Over 133 months only an annualized Sharpe near 0.6 is detectable at |t| > 2, so a statistically insignificant factor is not necessarily a zero.",
+    "power": "Over 134 months only an annualized Sharpe near 0.6 is detectable at |t| > 2, so a statistically insignificant factor is not necessarily a zero.",
     "window": "Every factor is measured over the same window, so the figures are directly comparable."
   }
 }
