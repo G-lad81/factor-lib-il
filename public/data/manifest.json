@@ -5,8 +5,8 @@
   "distributable": true,
   "data_license": "CC-BY-NC-4.0",
   "methodology_version": "1.1.0",
-  "data_version": "2026.08.0",
-  "generated_at": "2026-09-03T04:00:13Z",
+  "data_version": "2026.09.0",
+  "generated_at": "2026-10-03T04:00:07Z",
   "factors": [
     "rf",
     "mkt_rf",
@@ -16,14 +16,14 @@
   ],
   "daily": {
     "path": "data/factors_daily.csv",
-    "rows": 2739,
+    "rows": 2757,
     "coverage_start": "2015-07-01",
-    "coverage_end": "2026-08-31"
+    "coverage_end": "2026-09-30"
   },
   "monthly": {
     "path": "data/factors_monthly.csv",
-    "rows": 134,
+    "rows": 135,
     "coverage_start": "2015-07-30",
-    "coverage_end": "2026-08-31"
+    "coverage_end": "2026-09-30"
   }
 }
